@@ -61,12 +61,6 @@ class MINKL(object):
             x_d = [int(i) for i in x_d_str]
             x_r = [normalize(x_[i], -10, 10) for i in range(self.Nd, self.Nd+self.Nr)]
             x_z = [normalize(x_[i], 0, 19) for i in range(self.Nd+self.Nr, self.N)]
-        elif self.optimizer == 'SMAC and e.evalfun':
-            assert isinstance(x_, np.ndarray)
-            x_ = x_.tolist()
-            x_d = x_[:self.Nd]
-            x_r = [normalize(x_[i], -10, 10) for i in range(self.Nd, self.Nd+self.Nr)]
-            x_z = [normalize(x_[i], 0, 19) for i in range(self.Nd+self.Nr, self.N)]
         elif self.optimizer == 'mipego':
             assert isinstance(x_, dict)
             # Note: in mithril server, dictionary x_ is not ordered !
@@ -76,25 +70,6 @@ class MINKL(object):
             x_d = x_[:self.Nd]
             x_r = [normalize(x_[i], -10, 10) for i in range(self.Nd, self.Nd+self.Nr)]
             x_z = [normalize(x_[i], 0, 19) for i in range(self.Nd+self.Nr, self.N)]
-        elif self.optimizer == 'mipego and e.evalfun':
-            assert isinstance(x_, np.ndarray) # x_ is already ordered
-            #print("x_ = {}".format(x_))
-            x_ = x_.tolist()
-            x_d = x_[:self.Nd]
-            x_r = [normalize(x_[i], -10, 10) for i in range(self.Nd, self.Nd+self.Nr)]
-            x_z = [normalize(x_[i], 0, 19) for i in range(self.Nd+self.Nr, self.N)]
-        # elif optimizer == 'mipego and e.evalfun 2':
-        #     assert isinstance(x_, list) # x_ is already ordered
-        #     x_d = x_[:self.Nd]
-        #     x_r = [normalize(x_[i], -10, 10) for i in range(self.Nd, self.Nd+self.Nr)]
-        #     x_z = [normalize(x_[i], 0, 19) for i in range(self.Nd+self.Nr, self.N)]
-        elif self.optimizer == 'irace':
-            x_d = x_[:self.Nd]
-            x_r = [normalize(x_[i], -10, 10) for i in range(self.Nd, self.Nd+self.Nr)]
-            x_z = [normalize(x_[i], 0, 19) for i in range(self.Nd+self.Nr, self.N)]
-        elif self.optimizer == 'visualize 2dim':
-            x_r = normalize(x_r, -10, 10) 
-            x_z = normalize(x_z, 0, 19)
 
         self.individual = x_r + x_z + x_d
         # self.individual = x_r + x_z + x_d
@@ -370,8 +345,4 @@ class MINKL(object):
         self.individual = [0] * self.N # here initialize self.individual for bruteForce
         self.bruteForce(self.bestFitness, self.individual, 0)
         return self.bestFitness
-
-#TODO: receive parameters and redirect function value to stdout, just like auto_all_cnn.py, 
-# in order to achieve the purpose that distributes a function evaluation to one core.
-
 
